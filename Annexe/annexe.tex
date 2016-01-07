@@ -1,3 +1,45 @@
-\chapter{ ANNEXE A}
+\chapter{Evolution of $V_{BE}$ with respect to temperature}
+
+The details of the calculation of the dependence of $V_{BE}$ to temperature. We fisrt devellop the temperature dependence : 
+
+\begin{align}
+  V_{BE} & = \frac{k_BT}{q} \cdot ln \left( \frac{I_C}{I_S} \right) \\
+  I_S ~   & \alpha ~ \mu ~ k T ~ n_i^2 \\
+  \mu ~   & \alpha ~ \mu_0 ~ T^m \\
+  n_i^2 ~ & \alpha~ T^3  \cdot  exp\left(\frac{E_g}{kT}\right)
+\end{align}
+
+With $\mu$ the mobility of the carriers, $n_i$ the intrinsic carrier concentration of silicon and $E_g~\approx 1.12 eV$ the bandgap energy of silicon.
+
+We introduce a parameter b, which is a proprtionnality factor :
+
+\begin{equation}
+  I_S = b T^{4+m} \cdot exp\left(\frac{E_g}{kT}\right)
+\end{equation}
+
+Once we have devellop the expression with respect with T, we start to derivate the expression : 
+
+\begin{equation}
+    \frac{\partial V_{BE}}{\partial T} = \frac{\partial U_{T}}{\partial T}\cdot ln \left( \frac{I_C}{I_S} \right) + \frac{\partial I_{S}}{\partial T} \cdot \frac{U_T}{I_S}
+\end{equation}
+
+\begin{equation}
+  \frac{\partial I_{S}}{\partial T} = b(4+m)T^{3+m}\cdot exp\left(\frac{E_g}{kT}\right) + bT^{4+m}\left(exp\left(\frac{E_g}{kT}\right)\right)\cdot \frac{E_g}{k T^{2}} 
+\end{equation}
+
+  
+\begin{equation}
+  \frac{U_T}{I_S} \frac{\partial I_{S}}{\partial T} = (4+m)\frac{U_T}{T} + \frac{E_g}{kT^2}\cdot U_T
+\end{equation}
+
+We obtain finally :
+
+\begin{align}
+  \frac{\partial V_{BE}}{\partial T} & = \frac{U_T}{T} ln \left( \frac{I_C}{I_S} \right) - (4+m)\frac{U_T}{T} - \frac{E_g}{kT^2}\cdot U_T \\
+  \frac{\partial V_{BE}}{\partial T} & = \frac{V_{BE} - (4+m)U_T - E_g/q}{T}
+\end{align}
+
+
+
 \chapter{ ANNEXE B}
 \chapter{ ANNEXE C}
