@@ -219,28 +219,6 @@
 \tableofcontents
 
 
-% \newpage
-% \chapter*{Remerciement}
-% \addcontentsline{toc}{chapter}{Remerciement}
-% 
-% REMERCIEMENT
-% 
-% 
-% \chapter*{Introduction}
-% \addcontentsline{toc}{chapter}{Introduction}
-% 
-% INTRODUCTION
-% 
-
-\newpage
-% 
-\addcontentsline{toc}{chapter}{Abstract}
-\vspace{3cm}
-\textbf{Abstract} \\
-\newline
-\hspace*{17pt} ABSTRACT
-
-\newpage
 \begin{minipage}{\textwidth}
   \listoffigures
   \listoftables
@@ -248,11 +226,26 @@
 
 \newpage
 
+\addcontentsline{toc}{chapter}{Abstract}
+\vspace{3cm}
+\textbf{Abstract} \\
+\newline
+\hspace*{17pt} In analog IC design, the design of each block start by choosing a voltage reference that is generaly used as power supply voltage or a different important reference. The effect of temperature on this voltage is very important as it can totaly change the way of operating of the circuit. A voltage reference insensitive to tempperature is then a very used design in various application.
+
+Almost all the reference voltage use the bandgap principle, however this bandgap reference can be designed in various ways. One of the main goals of this project is to study the bandgap principle but also to find which structure is the most adapted to a special requirement which is the current consumption.
+In fact, the final idea is to use a voltage reference for low-power application, and therefore use a structure that will limit the current consumption.
+
+During this report we are going to see the different principle that drive the bandgap reference voltage and then study two different structure choosen for their low current consumption. The report will present the various advantages of each structure and also the many tradeoffs that they reveal.
+
+
+
+\newpage
+
 \pagenumbering{arabic}
 
 \chapter{Principle \& Specifications}
 
-Voltage references have always been an essential component of any system and consequently an important topic to explore. The last decades thrust toward higher and even total system integration has required all designers to be knowledgeable of this particular topic due to its mixed-signal implications (output impedance, temperature coefficient, etc...)
+Voltage references have always been an essential component of any system and consequently an important topic to explore. The last decades  even total system integration has required all designers to be knowledgeable of this particular topic due to its mixed-signal implications (output impedance, temperature coefficient, etc...)
 
 
 A general-use (ideal) voltage reference is a circuit used to generate a fixed voltage, $V_{ref}$, that is independent of the power supply voltage VDD (where $V_{ref} < VDD$ ), temperature, and process variations. In other words, the ideal reference voltage is independent of PVT. In some cases, we want to design a reference that varies with temperature. For example, if $V_{ref}$ increases with temperature, Fig. \ref{ptat_crb}, we say that the reference voltage is proportional to absolute temperature or \textbf{PTAT}. If the reference voltage decreases with increasing temperature,            Fig. \ref{CTAT_crb}, the reference is said to be complementary to absolute temperature or \textbf{CTAT}. 
@@ -285,9 +278,9 @@ The \textbf{PTAT} and \textbf{CTAT} references can be used to design a voltage r
    \label{Gene_bandgap}
 \end{figure}
 
-Now, we need to find the component, or a characteristic that has a PTAT or CTAT behaviour. We are going to use the usual componenent, Bipolar and MOS transistor. In one hand, we can notice that the temperature coefficient of (evolution with respect to Temperature ) $V_{BE}$ is negative, as well as the $V_{GS}$ of a MOS transitor. In the other hand, we can observe that two bipolar or MOS transistor working at a unequal current densities create a voltage that is proportionnal to $U_T = \frac{kT}{q}$ therefore PTAT voltage (Positive Temperature Coefficient - TC).
+In a limited library of electronic component, we need to find a characteristic or a mechanism to build a PTAT or CTAT behaviour. The most usual componenent used in Analog IC design, Bipolar and MOS transistor, will be the key of these construction. In one hand, we can notice that the temperature coefficient of the base-emmitter voltage ($V_{BE}$) is negative, as well as the $V_{GS}$ of a MOS transitor. In the other hand, we can observe that two bipolar or MOS transistor working at a unequal current densities create a voltage that is proportionnal to $U_T = \frac{kT}{q}$ therefore PTAT voltage (Positive Temperature Coefficient - TC).
 
-The bandgap voltage reference will be used in different block, and for applications with low power consumption. The design will then take into account some specifications related to these applications. We can resume the main specifications of this project in the next table :
+The bandgap voltage reference will be used in different block, and specially for applications with low power consumption. The design will then take into account some specifications related to these applications. We can resume these main specifications in the next table :
 
 \begin{table}[h]
   \begin{center}
@@ -319,23 +312,24 @@ The base-emmiter voltage of a bipolar transistors or, more generally, the forwar
   V_{BE} = \frac{k_BT}{q} \cdot ln \left( \frac{I_C}{I_S} \right)
 \end{equation}
 
-With $I_S$, the saturation current which depend on the temperature through different characteristic ($n_i$, $\mu_0$) that depend differently of temperature. In a first calculation, we suppose that the collector current $I_C$ is independent of the temperature. After calculation (details on Appendix \ref{}) we obtain : 
+With $I_S$, the saturation current of a bipolar transistor. In fact, $I_S$ depend on the temperature through different characteristic $n_i$ and $\mu_0$ for instance. In a first calculation, we suppose that the collector current $I_C$ is independent of the temperature. After calculation (details on Appendix A) we obtain : 
 
 \begin{equation}
  \frac{\partial V_{BE}}{\partial T} = \frac{V_{BE} - (4+m)U_T - E_g/q}{T}
  \label{DvbeDT}                        
 \end{equation}
 
-Where $m /approx -3/2$ a process parameter, $E_g /approx 1.12 eV $ the bandgap energy of silicon, $U_T = \frac{kT}{q}$ the thermal voltage. 
-The equation \ref{DvbeDT}, reveal the dependence of the TC of $V_{BE}$ to the magnitude of $V_{BE}$ itself.
-We then fix $V_BE \approx 700 mV $, $T \approx 300 K$ and we obtain $\frac{\partial V_{BE}}{\partial T} \approx -1.2 mV/ K$. In fact, in this part we limit our temperature analysis to the dependence to the first order of temperature which create a second order temperature dependence.
+Where $m \approx -3/2$ a process parameter, $E_g \approx 1.12 eV $ the bandgap energy of silicon, $U_T = \frac{kT}{q}$ the thermal voltage. 
+
+The equation \ref{DvbeDT}, reveal the dependence of $\frac{\partial V_{BE}}{\partial T}$ to the magnitude of $V_{BE}$, the bandgap energy of silicon (thus the name of the voltage reference) and to the temperature itself. In fact, we can do a Taylor serie development of $V_{BE}$ with respect to temperature and we will find that the first order of the development is the dominant term, and it's that term that we are going to focus on.
+Therfore, we can fix $V_BE \approx 700 mV $, $T \approx 300 K$ and we obtain $\frac{\partial V_{BE}}{\partial T} \approx -1.2 mV/ K$.
 
 
 \newpage
 
 \section{Bipolar Implementation in CMOS process}
 
-The implementation of a bipolar transitor in a CMOS process used here process a lateral bipolar transistor which can be better controled and processed with a much better accuracy than the vertical bipolar. In fact, during the process, the depth of oxydation in the silicon is controlled with much more difficulty whereas the oxydation of a specific area is much more controled and processed with a better accuracy. We then use a lateral transistor, processed and layouted as in the Fig \ref{PNPCMOS} : 
+The implementation of a bipolar transitor in a CMOS process use a lateral architecture of a bipolar transistor which can be better controled and processed with a much better accuracy than the vertical architecture. In fact, during the process, the depth of oxydation in the silicon is controlled with a very low accuracy whereas the oxydation of a specific area is much more controled and better processed. We then use a lateral transistor, processed and layouted as in the Fig \ref{PNPCMOS} : 
 
 \begin{figure}[h]
   \begin{center}
@@ -348,15 +342,8 @@ The implementation of a bipolar transitor in a CMOS process used here process a 
 \chapter{Generate a PTAT Voltage}
 \section{Using Base-emitter Voltage}
 
-As said in the first chapter, we are going to use two bipolar transistor in two different current densities, and then the difference between their base-emitter voltage produce a voltage which is proportionnal to the thermal voltage, we then have a PTAT voltage.
+As said in the first chapter, we are going to use two bipolar transistor working in two different current densities, and then measure the difference between their base-emitter voltage. This diffenrtial voltage is proportionnal to the thermal voltage, and give us then PTAT behaviour.
 
-We are going to use two branches with the same current I, and in one branch we are going to use n identical bipolar transitor and one bipolar transistor in the other branch ($I_{S2} = n I_{S}$ and $I_{S1} = I_{S}$).
-
-\begin{align}
-  \Delta V_{BE} & = V_{BE1} - V_{BE2} \\
-              & = U_T ln \left( \frac{I_0}{I_{S1}}\right) - U_T ln \left( \frac{I_0}{I_{S2}}\right) \\
-              & = \frac{kT}{q} \cdot ln(n)
-\end{align}
 
 \begin{figure}[h]
   \begin{center}
@@ -366,9 +353,20 @@ We are going to use two branches with the same current I, and in one branch we a
   \label{PTAT_1}
 \end{figure}
 
+To generate to different current densities we first take two branches, with bipolar transistor perfectly matched. In this two branches will flow the same current I, and in one branch we are going put on parallel n identical bipolar transitor and one bipolar transistor in the other branch ($I_{S2} = n I_{S}$ and $I_{S1} = I_{S}$).
+Therefore we have :
+
+\begin{align}
+  \Delta V_{BE} & = V_{BE1} - V_{BE2} \\
+              & = U_T ln \left( \frac{I_0}{I_{S1}}\right) - U_T ln \left( \frac{I_0}{I_{S2}}\right) \\
+              & = \frac{kT}{q} \cdot ln(n)
+\end{align}
+
+
+
 \newpage
 
-The precedent structure manipulate a differential voltage, the final idea is to add this voltage to a CTAT voltage which is not possible in a complete structure, so instead of generating a PTAT differential voltage, we generate a PTAT current which we can easily copy in another branch.
+The final idea is to add this diffrential-voltage to a CTAT voltage which is not possible in a complete structure, so instead of generating a PTAT differential voltage, we generate a PTAT current which we can be easily copied in another branch.
 
 \begin{figure}[h]
   \begin{center}
@@ -378,7 +376,7 @@ The precedent structure manipulate a differential voltage, the final idea is to 
   \label{PTAT_Cur}
 \end{figure}
 
-In this structure, we need also use a mechanism that will force $V_{O1} = V_{O2}$, we will use a operational amplifier with a high gain to force the two voltages to be equal.
+In this new structure, we need to add a mechanism that will force $V_{O1} = V_{O2}$, concretely we will use a operational amplifier with a high gain to force the two voltages to be equal.
 \begin{align}
   V_{O1} & = V_{O2} \\
   V_{BE1}& = RI + V_{BE2} \\
@@ -386,11 +384,11 @@ In this structure, we need also use a mechanism that will force $V_{O1} = V_{O2}
          & = \frac{\frac{kT}{q}\cdot ln(n)}{R}
 \end{align}
 
-We obtain finally a PTAT current proportional to the thermal voltage that is easier to sum with a CTAT current or Voltage. Moreover we have two parameter n and R, that we can fix to cancel the negative temperature coefficient.
+We obtain finally a PTAT current proportional to the thermal voltage that is easier to sum with a CTAT voltage. Moreover we have two parameter n and R, that we can fix to change the temperature coefficient and then cancel the TC of the CTAT branch.
 
 \section{Using Gate-source Voltage}
 
-We use two transistor M1 and M2, which will operate in weak inversion with two different current densities. This region of operation have quasi the same way of variation than the bipolar transistor, whith a exponential dependence of the drain current with respect to the gate-source voltage.
+The same PTAT behaviour can be observed with MOS transistor, in concrete terms we use two transistor M1 and M2, which will operate in weak inversion with two different current densities. This region of operation has quasi the same variations than the bipolar transistor : an exponential dependence of the drain current with respect to the gate-source voltage.
 \begin{align}
   I_{DS} & = I_{SPECs} \cdot \frac{W}{L} \cdot exp\left( q\frac{V_{gs}-V_t}{nkT} \right) \\
   I_{SPECs} & = 2 n \mu_{n} C_{ox} U_t^2
@@ -398,7 +396,7 @@ We use two transistor M1 and M2, which will operate in weak inversion with two d
 
 \newpage
 
-In the same way, we use an Opamp to ensure that the two voltages $V_A$ $V_B$ are equal. We use the same current in the two branches, and we size the transistor M2 m times larger than M1, we then have :
+In the same way, we use an Opamp to ensure that the two voltages $V_A$ $V_B$ are equal. We use the same current in the two branches using a current mirror ( $M_{10}$ and $M_{11}$ ), and we size the transistor M2 m times larger than M1, we then have :
 
 \begin{align}
   V_{GS1} = & ~ n U_T \cdot ln\left( \frac{I_{DS1} \cdot L_1}{I_{SPECs} \cdot W_1} + V_{T0} \right) \\ 
@@ -420,13 +418,13 @@ In the same logic we obtain a current $I_{R1}$ which is proportional to $\Delta 
   \label{PTAT_MOS}
 \end{figure}
 
-The final result is very similar to the bipolar "version", except that for the MOS version, $\Delta V_{GS}$ is proportionnal to the slope factor, except that this parameter is dependent of the temperature, the variation can be neglected for the dependence of the first order of temperature. 
+The final result is very similar to the bipolar "version", except that for the MOS version, $\Delta V_{GS}$ is proportionnal to the slope factor, which add another dependence in temperature. For our use, the variation can be neglected for the dependence of the first order of temperature. 
 
 \chapter{Bandgap Voltage}
 \section{Current Source - Beta-Multiplier}
 
 As we are limited to 3 $\mu A$ in current consumption, we are going to limit the current consumption in the current source to the minimum. We decide then to produce a current of 100 nA that we are going to mirror in the different branches to generate a PTAT and a CTAT voltage.
-To generate this current, we are going to use the structure in the Fig \ref{beta_m} :
+To generate this current, we use the structure in the Fig \ref{beta_m} :
 
 \begin{figure}[h]
   \begin{center}
@@ -436,10 +434,12 @@ To generate this current, we are going to use the structure in the Fig \ref{beta
   \label{beta_m}
 \end{figure}
 
-For such low current, we use the two transistor M1 and M2 in weak inversion, and to obtain a good current mirror with respect to mismatch and have then $I_{ref}$ quasi equal to $I_{out}$ we put the transistor M3 and M4 in strong inversion. We can then used the simplified equation of the drain current in weak inversion, given by the EKV model : 
+For such low current, the two transistor M1 and M2 operate in weak inversion, and to obtain a good current mirror with respect to mismatch and have then $I_{ref}$ quasi equal to $I_{out}$ we put the transistor M3 and M4 in strong inversion. 
+To determine the variation of the current $I_{out}$ with respect to $R_S$ we use the simplified equation of the drain current in weak inversion, given by the EKV model : 
 
 \begin{equation}
   I_{out} = I_{spec} \cdot exp \left( \frac{V_G - n V_S - V_{T0}}{n U_T}\right)
+  \label{WI}
 \end{equation}
 
 If we apply this equation to the transitor M1 and M2, with M2 k times larger than M1, we have the final expression of $I_{out}$ :
@@ -450,7 +450,7 @@ If we apply this equation to the transitor M1 and M2, with M2 k times larger tha
 
 The main problem of this structure is the dependence of the current $I_{out}$ to the absolute value of $R_S$, which make the current depend on process variation. In fact, the absolute value of $R_S$ have a global precision of $\pm 20~\%$.
 
-The other important dependence of $I_{out}$ is to the varation of $V_{DD}$ by $\Delta V_{DD}$. Therefore, we have to do a small signal analysis of the varation $\Delta I_{out}$ of $I_{out}$ with a varation of $V_{DD}$ by $\Delta V_{DD}$. The details of the calculation are shown in the Appendix \ref{deltaiout}, but we have finally :
+The other important dependence of $I_{out}$ is to the varation of $V_{DD}$ by $\Delta V_{DD}$. Therefore, we have to do a small signal analysis of the varation $\Delta I_{out}$ of $I_{out}$ with a varation of $V_{DD}$ by $\Delta V_{DD}$. The details of the calculation are shown in the Appendix \ref{deltaiout}, we have finally :
 
 \begin{equation}
   \frac{\Delta I_{out}}{\Delta V_{DD}} \approx \frac{1}{r_{on}} + \frac{2}{r_{op}}
@@ -466,9 +466,8 @@ With $r_{on}$ and $r_{op}$ respectively the output resistance of the NMOS and PM
   \label{beta_m_C}
 \end{figure}
 
-As the transistor M1 and M2 should work on weak inversion we choose an inversion coefficient $IC(M1) = ?????$ and we choose k = 4, so $\frac{W_2}{L_2}~=~4\cdot\frac{W_1}{L_1} $
-To maximize the swing we put the voltage $V$
-And finally, the transistor M5 and M6, should work on strong inversion, so we choose an inversion coefficient $IC = ?????$ so we can have a very large value of $L_5$ and $L_6$. We have finally : 
+As the transistor M1 and M2 should work on weak inversion we choose an inversion coefficient $IC(M1) = 0.1$ and we choose k = 4, so $\frac{W_2}{L_2}~=~4\cdot\frac{W_1}{L_1} $
+And finally, the transistor M5 and M6, should work on strong inversion, so we choose an inversion coefficient $IC = 30$ so we can have a very large value of $L_5$ and $L_6$. Finally : 
 
 \begin{table}[h]
   \begin{center}
@@ -485,7 +484,7 @@ And finally, the transistor M5 and M6, should work on strong inversion, so we ch
 \newpage
 \section{Single Stage OTA}
 
-The specifications impose us a very low current consumption (max 3 $\mu A$), though the amplifier need to have a very high gain so we can have $V_{O1}$ = $V_{O2}$, Fig. \ref{PTAT_Cur}, and then we need enough current to have enough gain, we decide to fix a gain $A_0 = 500 \approx 50~dB$.
+The specifications impose us a very low current consumption (max 3 $\mu A$), though the amplifier need to have a very high gain so we can have $V_{O1}$ = $V_{O2}$, Fig. \ref{PTAT_Cur}, and to achieve that we need enough current to have enough gain, so we need to find the good compromise between the High gain and current consumption specifications, we decide to fix a gain $A_0 = 500 \approx 50~dB$ with a current of 500~nA.
 
 \begin{figure}[h]
   \begin{center}
@@ -496,7 +495,7 @@ The specifications impose us a very low current consumption (max 3 $\mu A$), tho
 \end{figure}
 
 The transistor m1 and m2 have the same size and the transistor m3 and m4 too.
-We choose then a current $I_D(m5)= I_0 = 500~nA$, we have then $I_D(m1,m2,m3,m4)= I_0/2 =250~nA$. We fix also the gain band width (GBW) to 10 kHz and a load capacitance $C_L = 1~pF$. We can use the expression of the unity gain frequency express $g_m(m1,m2)$ :
+We choose a current $I_D(m5)= I_0 = 500~nA$, we have then $I_D(m1,m2,m3,m4)= I_0/2 =250~nA$. We fix also the gain band width (GBW) to 10 kHz and a load capacitance $C_L = 1~pF$. We can use the expression of the unity gain frequency to express $g_m(m1,m2)$ :
 
 \begin{equation}
   g_m(m1,m2) = GBW\cdot C_L = 10\cdot10^{-9} \cdot \Omega^{-1}
@@ -547,7 +546,7 @@ The final dimension of the transistors are resumed in the next table :
 \section{Overall circuits}
 \subsection{Bandgap Voltage Reference}
 
-The final circuits is composed of the PTAT circuits using a current mirror to copy the current in the two branches, these two transistor (M3,M4) are biased thanks to the beta-multiplier current source, in fact in each branch we use a current of 250 nA. The operational amplifier equalize the voltage $V_A$ and $V_B$ and therfore produce a PTAT current. This current is copied in the third branch (right one) and converted to a PTAT voltage thanks to the resistance $R_2$ and then added to the base-emitter voltage of the PNP bipolar transistor. 
+The final circuits is composed of the PTAT branches using a current mirror to copy the current in the two branches, these two transistor (M3,M4) are biased thanks to the beta-multiplier current source, in fact in each branch we use a current of 250 nA. The PTAT current is copied in the third branch (right one) and converted to a PTAT voltage thanks to the resistance $R_2$ and then added to the base-emitter voltage of the PNP bipolar transistor ( CTAT ). 
 
 \begin{figure}[h]
   \begin{center}
@@ -579,11 +578,13 @@ The final equation to cancel the temperature
   \caption{Bandgap Voltage Reference Dimensions}
 \end{table}
 
-The final current consumption is $200~nA + 3\cdot250~nA + 500~nA = 1.450~\mu A $, the final voltage is quasi-independent of the temperature but the current generated on the third branch is PTAT, we have only a bandgap voltage, moreover for low power applications it's very interesting to have a voltage inferior to 1V, as it's usually used in low power device. The cancelation of the two temperature coefficient is done thanks to the quotient of the two resistance, so the cancelation doesn't depend on process varation, in fact if the process create an imprecision of +20 \% on $R_1$,for instance, the resistance $R_2$ is also 20 \% higher than the nominal value.
+The final current consumption is $200~nA + 3\cdot250~nA + 500~nA = 1.450~\mu A $, the final voltage is quasi-independent of the temperature but the current generated on the third branch is PTAT, we have only a bandgap voltage. Moreover for low power applications it's very interesting to have a voltage inferior to 1V, as it's usually used in low power device. The cancelation of the two temperature coefficient is done thanks to the quotient of the two resistance, so the cancelation doesn't depend on process varation, in fact if the process create an imprecision of +20 \% on $R_1$,for instance, the resistance $R_2$ is also 20 \% higher than the nominal value.
+
+We obtain then a theortical Bandgap voltage reference independent of temperature, process variation and power supply voltage.
 
 \subsection{ Sub-1V Bandgap Current and Voltage Reference}
 
-A problem with the bandgap circuits described so far is that they are not compatible with low power applications, that  usually need a reference voltage sub 1V. The fundamental problem is that the previous circuits produce, in series, the CTAT voltage across a pn-junction and a PTAT voltage scaled to provide temperature- independence. Together, these voltages exceed 1 V. The solution is to sum currents: one CPTAT and one PTAT, passing them through a resistor to form a temperature-insensitive reference voltage below 1 V.
+A problem with the bandgap circuits described so far is that they are not compatible with low power applications, that  usually need a reference voltage sub 1V. The fundamental problem is that the previous circuits produce the CTAT voltage across a pn-junction and a PTAT voltage scaled to provide temperature- independence. Together, these voltages exceed 1 V. The solution is to sum currents: one CTAT and one PTAT, passing them through a resistor to form a temperature-insensitive reference voltage below 1 V.
 A low-voltage bandgap circuit based on this idea is shown in Fig. \ref{bandgap_2pnp}. The feedback loop formed by the amplifier and current mirror Q1 /Q2 ensures that the voltages at the drains of Q1 and Q2 are very well matched and equal to the base-emitter voltage drop across diode D , $V_{BE1}$ , which is inversely proportional to absolute temperature.
  
 \begin{figure}[h]
@@ -607,8 +608,6 @@ These two currents are summed at the drain of Q2 and mirrored to device Q3 . The
   \label{IPtat}
 \end{equation}
 
-%The voltage across Rb is equal to the difference between the forward bias voltages of D1 and D2, ΔVBE, and is therefore PTAT. The current mirror and matched resistors Ra ensure that the current through the diodes differs by the factor M, and that the diode current densities differ by a factor MN .
-
 The values M, N, Ra, and Rb are chosen to ensure that the inverse temperature coefficient of the first term is pre- cisely cancelled by the positive temperature coefficient of the second term. Notice that nowhere are there DC volt- ages exceeding VBE, so this circuit has been used with supply voltages as low as 0.8 V. The values of K and R can be chosen to scale the actual value of the reference potential at Vref, while the values of N, Ra and Rb are chosen to cancel the negative and positive temperature coefficients of the first and second terms in (\ref{finaleqbdgp}).
 
 \begin{equation}
@@ -616,28 +615,95 @@ The values M, N, Ra, and Rb are chosen to ensure that the inverse temperature co
   \label{finaleqbdgp}
 \end{equation}
 
-% BILAN
+This structure presente a first problem which is the size of the resistance. The voltage $V_A$ should be fixed at at least 0.7 V, as we already impose the current on this branch through the beta multiplier (250 nA), we have then a resistance $R_a$ which is around 3 $M\Omega$ and $R_b$ is around a 100 $k\Omega$, this is to add to the large area took by the bipolar transistor ( 5 PNP of 50x50 $\mu m^2$). Despite the area issue, we have a very symetric structure, which generate both a bandgap voltage and current.
 
 
 \chapter{Results after Simulation}
 
 \section{Dependence to VDD}
 
-% Beta - multiplier dependence on VDD 
+The current source have been tested in two different ways, first we verified the influence of the cascode structure, initially designed to reduce the effect of the varations of $V_{DD}$ on the absolute value of $I_{ref}$ (\ref{beta_m}), then we will study the varation of the current $I_{ref}$ with respect to the variation of the absolute value of $R_{BIAS}$,(\ref{beta_m_C}).
+
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[scale=0.3]{photo/sweep_I_simu}
+  \end{center}
+  \caption{Caracteristic of the Beta Multiplier Current Source}
+\end{figure}
+
+We clearly see that the output current is inversly proportional to the value of the resistance as predicted in the theoretical part, nevertheless we notice that the absolute value of the current is shifted by an offset compared to the therotical results. This offset is probably due to the simplification done on the expression of the current with respect to the gate-source voltage of the MOS transistor, in fact the channel modulation length was not considered in the equation \ref{WI}, if we verify by calculation we find almost the same offset.
+We have also noticed on the previous part, that this structure is process dependent because the absolute value of the output current depend on the value of a resistance, nevertheless for the range of current we try to generate(\~ ~ 100 nA), we can notice on the characteristic that the local slope of the curve around 100 nA is very low, so an imprecision on the value of the resistance won't impact that much the absolute value of the current.
+
+\newpage
+
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[scale=0.35]{photo/simu_casc}
+  \end{center}
+\end{figure}
+
+To conclude, we can see that the use of a cascode sturcture is very efficient, such as the variation of $I_{out}$ with respect to $V_{DD}$ has been divided by 5 passing from the non-cascode structure to the cascode structure.
+Finaly we have succeded to build a current source which is quasi-independent of the power supply and we have reduced the dependency to process variation.
+
+
+\section{Single Stage OTA}
+
+The only characteristic of the OTA that interest us here is the gain $A_0$ thant we can measure through a frequency analysis :
+
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[scale=0.6]{photo/OTA_freq_gain}
+  \end{center}
+  \caption{OTA single stage frequency analysis}
+\end{figure}
+
+The final result are close to the calculation we have done, we can see that $A_0 \approx 43 dB$ which was the specifications of the OTA on the theoretical analysis 
 
 \section{Temperature Dependence}
 
-% Ca marche pas haha
+The result that we are going to present here are related to the second structure (sub 1V Bandgap), such as most conclusions are very closed between the two structure.
+In fact, except the fact that the first structure give us only a Bandgap Voltage higher than one Volt, whereas the second structure provide us a Bandgap Voltage and Current, with a voltage reference inferior to 1V, the main conclusions of the simulations are very close.
 
-\section{Simulation Post route}
+First, if we use the first OTA structure, with a single stage amplification we obtain for the second structure the next results :
 
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[scale=0.4]{photo/PTAT_CTAT_F}
+  \end{center}
+  \caption{Final Bandgap Voltage Reference}
+\end{figure} 
 
-% un CTAT qui marche bien :(
+If we quantify the final variation of $V_{ref}$ with respect to temperature, we obtain a variation of $200 ppm/K$, which is not an acceptable result, in fact with a bandgap structure we can at least have a final variation aroud the $50~ppm/K$.
+After more simulation we can observe that the two voltages (Fig. \ref{bandgap_2pnp}) $V_A$ and $V_B$ are too different  ( 200 mV difference). The main cause of this difference is the operational amplifier which clearly haven't enough gain to force the two voltages to be at the same level, despite the fact that a previous test with an ideal amplifier with the same gain gave a much better result. In fact, the common mode predicted and used in the frequency analysis is not the one in the real loop of the bandgap structure.
 
-% un PTAT qui marche bien :(
+We tried then to cascade the first amplifier with a second one very similar , in fact the second one is a single stage OTA, with a differential pair composed of NMOS transistor and a PMOS mirror current. The frequency analysis showed that the gain of this new cascaded OTA can go to 3000 which is clearly enough for our application.
+
+After testing the bandgap circuits with this OTA, we can observe that the two voltages $V_A$ and $V_B$ can not depass 0.3 V. In fact, the loop generated by the OTA have a point of stability near this voltage, if we don't force some initial condition. 
+
+In fact, the same test with inital condition stabilize the two voltages $V_A$ and $V_B$ around the voltage that we want ( 0.7V ), but without these initial condition, in other words when the circuits start from zero, the loop find a local point of stability around 0.2 V which stop our circuit from working. Unlikely, if $V_A$ and $V_B$ are blocked at 0.3 V, the PNP bipolar transistor are not working in saturation and have a total different behaviour with respect to temperature, moreover the resistance have no effect on the varation of the temperature coefficient.
+
+\section{Layout}
+
+Unfortunately, we did not have the time to go very far on the design to have an extracted layout and run simulations to see the effect of the layout and the matching on our circuit. However we have done a layout of the final circuit, first to measure the surface taken by the device and also to have to voltage reference on PTAT and the other CTAT to see if the layout doesn't show any problem on the behaviour of the CTAT or PTAT structure.
+
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[scale=0.4]{photo/Layout-ex.jpg}
+  \end{center}
+  \caption{Final Bandgap Voltage Reference}
+\end{figure} 
+
+The screen-shot of the layout show the problem we have raised on the theoretical part, the resistances and the bipolar transistor take the major silicon surface whereas the OTA, the beta multiplier and the current mirrors take 1/10 of the surface. This may be the principle reason to use MOS transistor to generate the PTAT reference, without forgetting that they are much more difficult to design because we use the MOS in weak inversion. 
 
 \chapter*{Conclusion}
 \addcontentsline{toc}{chapter}{Conclusion}
+
+During this semester project, I had the opportunity to discover another topic related to analog IC design, which is the dependency with respect to temperature. I had the occasion to start my first research on this topic, studying the bandgap principle and choosing,analysing the first structures and schematics. 
+
+I had also the chance to experiment the challenge related into building a structure with a very low current consumption and get deeper in my knowledge of the operation of a MOS transistor in such low current. Despite the fact the final result isn't what I expected when I started this project, I have choosen a very intersting structure and raised all the tradeoffs and resolved almost all of them. Part by part, I have divided the various section of the structure and highlighted the key point for designing each part and then point out the problem and the drawbacks of the various choices we have made.
+
+The final result is two possible structure, the first one with a bandgap voltage reference over 1V with a current consumption lower than $3~\mu A$, insensitive to temperature,process variation and power supply voltage. The second structure give us a bandgap voltage and current reference, with a voltage reference inferior to 1V which is very interesting for low-power application, the problem raised by this structure is the size of the resistance that are very huge and take the major surface on the silicon.
+The common problem raised of this two structure is the design of the OTA, in fact we need an OTA with enough high gain that won't stop the bipolar transistor of working in saturation because of a local point of stability that put a stop to our circuit.
 
 
 %%%%%%%%%%%%%%% Début de la gestion de l'annexe %%%%%%%%%%%%%%
@@ -647,6 +713,17 @@ The values M, N, Ra, and Rb are chosen to ensure that the inverse temperature co
 \end{appendices}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter*{References}
+
+[1] Behzad Razavi. Design of Analog CMOS Integrated Circuits. McGraw-Hill, 2000 
+
+[2] David A. Johns and Ken Martin. Analog Integrated Circuit Design. John Wiley \& Sons, Inc., New York, 1997.
+
+[3] H.Banba, H.Shiga, S.Umezawa, T.Miyaba, etc. “A CMOS Band gap Reference Circuit with Sub-1V Operation,” IEEE J.
+Solid-State Circuit, vol. 34, May 1999, pp670-674 
+
+[4] P.Gray, R.Meyer, Analysis and Design of Analog Integrated Circuits, Fifth Edition, Wiley.
 
 
 
