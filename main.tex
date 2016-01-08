@@ -375,6 +375,7 @@ The precedent structure manipulate a differential voltage, the final idea is to 
     \includegraphics[scale=0.35]{photo/PTAT2}
   \end{center}
   \caption{Generate a PTAT Current}
+  \label{PTAT_Cur}
 \end{figure}
 
 In this structure, we need also use a mechanism that will force $V_{O1} = V_{O2}$, we will use a operational amplifier with a high gain to force the two voltages to be equal.
@@ -424,27 +425,50 @@ The final result is very similar to the bipolar "version", except that for the M
 \chapter{Bandgap Voltage}
 \section{Current Source - Beta-Multiplier}
 
-As we are limited to 3 $\mu A$ in current consumption, we are going to limit the current consumption in the current-source to the minimum. We decide then to produce a current of 100 nA that we are going to mirror in the different branches to generate a PTAT and a CTAT voltage. To generate this current, we are going the structure in the Fig \ref{beta_m} :
+As we are limited to 3 $\mu A$ in current consumption, we are going to limit the current consumption in the current source to the minimum. We decide then to produce a current of 100 nA that we are going to mirror in the different branches to generate a PTAT and a CTAT voltage.
+To generate this current, we are going to use the structure in the Fig \ref{beta_m} :
 
 \begin{figure}[h]
   \begin{center}
-    \includegraphics[scale=0.3]{photo/beta_multiplier}
+    \includegraphics[scale=0.25]{photo/beta_multiplier}
   \end{center}
-  \caption{Beta-Multiplier Current Source}
+  \caption{Beta-Multiplier Current Source with Cascode}
   \label{beta_m}
 \end{figure}
 
-For such low current, we use the two transistor M1 and M2 in weak inversion, and to obtain a good current mirror with respect to mismatch and have $I_{ref}$ quasi equal to $I_{out}$ we put the transistor M3 and M4 in strong inversion.
+For such low current, we use the two transistor M1 and M2 in weak inversion, and to obtain a good current mirror with respect to mismatch and have then $I_{ref}$ quasi equal to $I_{out}$ we put the transistor M3 and M4 in strong inversion. We can then used the simplified equation of the drain current in weak inversion, given by the EKV model : 
 
 \begin{equation}
   I_{out} = I_{spec} \cdot exp \left( \frac{V_G - n V_S - V_{T0}}{n U_T}\right)
 \end{equation}
 
-If we apply this equation to the transitor M1 and M2, with M2 k times larger than M1, we have a simple equation :
+If we apply this equation to the transitor M1 and M2, with M2 k times larger than M1, we have the final expression of $I_{out}$ :
 
 \begin{equation}
   I_{out} = I_{ref} = \frac{U_T \cdot ln(k)}{R_S}
 \end{equation}
+
+The main problem of this structure is the dependence of the current $I_{out}$ to the absolute value of $R_S$, which make the current depend on process variation. In fact, the absolute value of $R_S$ have a global precision of $\pm 20~\%$.
+
+The other important dependence of $I_{out}$ is to the varation of $V_{DD}$ by $\Delta V_{DD}$. Therefore, we have to do a small signal analysis of the varation $\Delta I_{out}$ of $I_{out}$ with a varation of $V_{DD}$ by $\Delta V_{DD}$. The details of the calculation are shown in the Appendix \ref{deltaiout}, but we have finally :
+
+\begin{equation}
+  \frac{\Delta I_{out}}{\Delta V_{DD}} \approx \frac{1}{r_{on}} + \frac{2}{r_{op}}
+\end{equation} 
+
+With $r_{on}$ and $r_{op}$ respectively the output resistance of the NMOS and PMOS transistor, as shown in the Appendix \ref{deltaiout} . Therefore, to decrease the dependence of $I_{out}$ to $V_{DD}$, we have to increase $r_{on}$ and $r_{op}$, to do that we are going to use a cascode structure for the NMOS transistor and increase the length of the PMOS transistor to increase $r_{op}$. The final structure is shown on Fig \ref{beta_m_C} :
+
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[scale=0.35]{photo/beta_multiplier_c}
+  \end{center}
+  \caption{Beta-Multiplier Current Source with Cascode}
+  \label{beta_m_C}
+\end{figure}
+
+As the transistor M1 and M2 should work on weak inversion we choose an inversion coefficient $IC(M1) = ?????$ and we choose k = 4, so $\frac{W_2}{L_2}~=~4\cdot\frac{W_1}{L_1} $
+To maximize the swing we put the voltage $V$
+And finally, the transistor M5 and M6, should work on strong inversion, so we choose an inversion coefficient $IC = ?????$ so we can have a very large value of $L_5$ and $L_6$. We have finally : 
 
 \begin{table}[h]
   \begin{center}
@@ -452,30 +476,69 @@ If we apply this equation to the transitor M1 and M2, with M2 k times larger tha
     $W_1 = 4~\mu m$       & $L_1 = 180~ nm$ \\ \hline
     $W_2 =  16~ \mu m$       & $L_2 = 180~ nm$ \\ \hline
     $W_3 = W_4 = 5~ \mu m$ & $L_3 = L_4 = 250~ nm$  \\ \hline
-    $W_5 = W_6 = 1~ \mu m$ & $L_5 = L_6 = 300~ nm$ \\ \hline
+    $W_5 = W_6 = 250~nm$ & $L_5 = L_6 = 3.2~\mu m$ \\ \hline
   \end{tabular}
 \end{center}
 \caption{Beta-Multiplier transitor dimension}
 \end{table}
 
-
-
+\newpage
 \section{Single Stage OTA}
+
+The specifications impose us a very low current consumption (max 3 $\mu A$), though the amplifier need to have a very high gain so we can have $V_{O1}$ = $V_{O2}$, Fig. \ref{PTAT_Cur}, and then we need enough current to have enough gain, we decide to fix a gain $A_0 = 500 \approx 50~dB$.
 
 \begin{figure}[h]
   \begin{center}
-    \includegraphics[scale=0.35]{photo/OTA_Pmos}
+    \includegraphics[scale=0.3]{photo/OTA_Pmos}
   \end{center}
   \caption{OTA with PMOS differential pair}
   \label{OTA}
 \end{figure}
 
+The transistor m1 and m2 have the same size and the transistor m3 and m4 too.
+We choose then a current $I_D(m5)= I_0 = 500~nA$, we have then $I_D(m1,m2,m3,m4)= I_0/2 =250~nA$. We fix also the gain band width (GBW) to 10 kHz and a load capacitance $C_L = 1~pF$. We can use the expression of the unity gain frequency express $g_m(m1,m2)$ :
+
+\begin{equation}
+  g_m(m1,m2) = GBW\cdot C_L = 10\cdot10^{-9} \cdot \Omega^{-1}
+  \end{equation}   
+
+We have the value of $g_m$ and the current flowing on the transitors m1 and m2 we can now determine their inversion coefficient and then deduce the $\frac{W}{L}$ of the differential pair :
+
+\begin{equation}
+  \frac{g_m}{I} = \frac{1}{n U_T} \cdot \frac{2}{ \sqrt{1+4IC} +1 }
+\end{equation}
+\begin{equation}
+  \frac{W}{L}(m1,m2) = \frac{I_0/2}{I_{spec_{\Box}}\cdot IC}
+\end{equation}
+
+We know that the output resistance is related to the length of the transistor m1 and m4 due to the channel length modulation,eq. \ref{len}, moreover if we do the small signal analysis we can also link the gain $A_0$ to $R_{out}$, eq \ref{A0}. Finally, to size the NMOS current mirror we fix the overdrive voltage $V_{ov} = 200~mV$ and deduce the W/L thanks to Eq \ref{SI}. 
+
+
+\begin{equation}
+  L(m1,m4) = I_0/2 \cdot R_{out}~\left(\frac{1}{U_{aN}}+\frac{1}{U_{aP}}\right)
+  \label{len}
+\end{equation}
+
+\begin{equation}
+  A_0 = R_{out}\cdot g_m(m1,m2) 
+  \label{A0}
+\end{equation}
+
+\begin{equation}
+  \frac{W}{L}(m3, m4) = \frac{ 2n \cdot I_0/2}{\mu_n C_{ox} V_{ov}^2}
+  \label{SI}
+\end{equation}
+
+\newpage
+
+The final dimension of the transistors are resumed in the next table :
+
 \begin{table}[h]
   \begin{center}
   \begin{tabular}{|c|c|}\hline
-    $W_1 = W_2 = \mu m$ & $L_1 = L_2 = \mu m$  \\ \hline
-    $W_3 = W_4 = \mu m$ & $L_3 = L_4 = \mu m$ \\ \hline
-    $W_5 = \mu m$       & $L_5 = \mu m$ \\ \hline
+    $W_1 = W_2 = 1.47 ~\mu m$ & $L_1 = L_2 = 5.31 ~\mu m$  \\ \hline
+    $W_3 = W_4 = 12.05 ~\mu m$ & $L_3 = L_4 = 5.31 ~\mu m$ \\ \hline
+    $W_5 = 1.25 ~ \mu m$       & $L_5 = 3.2~\mu m$ \\ \hline
   \end{tabular}
 \end{center}
 \caption{OTA transitor dimension}
@@ -484,16 +547,94 @@ If we apply this equation to the transitor M1 and M2, with M2 k times larger tha
 \section{Overall circuits}
 \subsection{Bandgap Voltage Reference}
 
+The final circuits is composed of the PTAT circuits using a current mirror to copy the current in the two branches, these two transistor (M3,M4) are biased thanks to the beta-multiplier current source, in fact in each branch we use a current of 250 nA. The operational amplifier equalize the voltage $V_A$ and $V_B$ and therfore produce a PTAT current. This current is copied in the third branch (right one) and converted to a PTAT voltage thanks to the resistance $R_2$ and then added to the base-emitter voltage of the PNP bipolar transistor. 
 
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[scale=0.5]{photo/bandgap_3pnp}
+  \end{center}
+  \caption{Bandgap Voltage Reference}
+  \label{bandgap_3pnp}
+\end{figure}
+
+\begin{equation}
+  V_{ref} = V_{BE3} + \frac{R_2}{R_1} \Delta V_{BE} = V_{BE3} + \frac{R_2}{R_1} \cdot \frac{kT}{q}ln(n)
+\end{equation}
+
+The final equation to cancel the temperature
+
+\begin{align}
+  \frac{\partial V_{ref}}{\partial T} & = \frac{\partial V_{BE3}}{\partial T} + \frac{R_2}{R_1} \cdot \frac{k}{q}ln(n) \\
+  \frac{R_2}{R_1}                     & = - ~ \frac{ \frac{\partial V_{BE3}}{\partial T} }{ \frac{k}{q}ln(n) }
+\end{align}
+
+\begin{table}[h]
+  \begin{center}
+  \begin{tabular}{|c|c|}\hline
+    $W_3 = W_4 = W_5 = 625 ~nm $ & $L_3 = L_4 = L_5 = 3.2~\mu m$ \\ \hline 
+    $R_1 =  \Omega$     & $R_2 = \Omega $  \\ \hline \hline
+    \multicolumn{2}{|c|}{n = 4} \\ \hline
+  \end{tabular}
+\end{center}
+  \caption{Bandgap Voltage Reference Dimensions}
+\end{table}
+
+The final current consumption is $200~nA + 3\cdot250~nA + 500~nA = 1.450~\mu A $, the final voltage is quasi-independent of the temperature but the current generated on the third branch is PTAT, we have only a bandgap voltage, moreover for low power applications it's very interesting to have a voltage inferior to 1V, as it's usually used in low power device. The cancelation of the two temperature coefficient is done thanks to the quotient of the two resistance, so the cancelation doesn't depend on process varation, in fact if the process create an imprecision of +20 \% on $R_1$,for instance, the resistance $R_2$ is also 20 \% higher than the nominal value.
 
 \subsection{ Sub-1V Bandgap Current and Voltage Reference}
 
+A problem with the bandgap circuits described so far is that they are not compatible with low power applications, that  usually need a reference voltage sub 1V. The fundamental problem is that the previous circuits produce, in series, the CTAT voltage across a pn-junction and a PTAT voltage scaled to provide temperature- independence. Together, these voltages exceed 1 V. The solution is to sum currents: one CPTAT and one PTAT, passing them through a resistor to form a temperature-insensitive reference voltage below 1 V.
+A low-voltage bandgap circuit based on this idea is shown in Fig. \ref{bandgap_2pnp}. The feedback loop formed by the amplifier and current mirror Q1 /Q2 ensures that the voltages at the drains of Q1 and Q2 are very well matched and equal to the base-emitter voltage drop across diode D , $V_{BE1}$ , which is inversely proportional to absolute temperature.
+ 
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[scale=0.4]{photo/Figure_basique}
+  \end{center}
+  \caption{Bandgap Voltage and Current Reference}
+  \label{bandgap_2pnp}
+\end{figure}
+
+The CTAT voltage $V_{BE1}$ and PTAT $\Delta V_{BE}$ are converted into the currents I2a and I2b by the resistors Ra (\ref{ICtat}) and Rb,(\ref{ICtat}) respectively.
+These two currents are summed at the drain of Q2 and mirrored to device Q3 . The resulting current then passes back through resistor R to yield the reference output.
+
+\begin{equation}
+  I_{2a} = \frac{V_{BE1}}{R_a}
+  \label{ICtat}
+\end{equation}
+
+\begin{equation}
+  I_{2a} = \frac{\Delta V_{BE}}{R_b}
+  \label{IPtat}
+\end{equation}
+
+%The voltage across Rb is equal to the difference between the forward bias voltages of D1 and D2, ΔVBE, and is therefore PTAT. The current mirror and matched resistors Ra ensure that the current through the diodes differs by the factor M, and that the diode current densities differ by a factor MN .
+
+The values M, N, Ra, and Rb are chosen to ensure that the inverse temperature coefficient of the first term is pre- cisely cancelled by the positive temperature coefficient of the second term. Notice that nowhere are there DC volt- ages exceeding VBE, so this circuit has been used with supply voltages as low as 0.8 V. The values of K and R can be chosen to scale the actual value of the reference potential at Vref, while the values of N, Ra and Rb are chosen to cancel the negative and positive temperature coefficients of the first and second terms in (\ref{finaleqbdgp}).
+
+\begin{equation}
+  V_{ref} = V_{BE1} \frac{KR}{R_a} + \frac{kT}{q}ln(N) \frac{KR}{R_b} 
+  \label{finaleqbdgp}
+\end{equation}
+
+% BILAN
 
 
 \chapter{Results after Simulation}
+
+\section{Dependence to VDD}
+
+% Beta - multiplier dependence on VDD 
+
 \section{Temperature Dependence}
-\section{Dependence to VDD - PSRR}
+
+% Ca marche pas haha
+
 \section{Simulation Post route}
+
+
+% un CTAT qui marche bien :(
+
+% un PTAT qui marche bien :(
 
 \chapter*{Conclusion}
 \addcontentsline{toc}{chapter}{Conclusion}

@@ -39,7 +39,38 @@ We obtain finally :
   \frac{\partial V_{BE}}{\partial T} & = \frac{V_{BE} - (4+m)U_T - E_g/q}{T}
 \end{align}
 
+\chapter{Output resistance of Beta Multiplier Current Source}
+
+We can first draw the small signal schematic :
+
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[scale=0.25]{photo/small_sig_bm}
+  \end{center}
+  \caption{Small Signal Analysis}
+  \label{deltaiout}
+\end{figure}
+
+We have the in the right branch :
+
+\begin{align}
+  \Delta V_{DD} & = \frac{\Delta I_{out}}{g_{mp}} + R_s\cdot \Delta I_{out} + r_{on}\cdot ( \Delta I_{out} - g_{mn}(M2)\cdot v_{gn} + n \cdot g_{mn}(M2) \cdot R_S \Delta I_{out}  ) \\ 
+  \Delta V_{DD} & \approx 3 \cdot r_{on} \Delta I_{out} - 2 \cdot r_{on} g_m v_{gn} 
+\end{align}
+
+We have the in the left branch :
+
+\begin{align}
+  \frac{\Delta V_{DD} - v_{gn}}{r_{op}} + g_{mp} \frac{\Delta I_{out}}{g_{mp}} & = g_{mn} v_{gn} \\ 
+  g_{mn}~v_{gn} & \approx \frac{\Delta V_{DD}}{r_{op}} + \Delta I_{out}  
+\end{align}
+
+Finaly we have :
+
+\begin{equation}
+  \frac{\Delta I_{out}}{\Delta V_{DD}} \approx \frac{1}{r_{on}} + \frac{2}{r_{op}}
+\end{equation}
 
 
-\chapter{ ANNEXE B}
+
 \chapter{ ANNEXE C}
